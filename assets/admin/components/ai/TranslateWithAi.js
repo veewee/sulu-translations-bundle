@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
-import AIConfig, {buildTranslateRoute} from "sulu-translations-bundle/ai/config";
+import AIConfig, {buildTranslateRoute} from "../../ai/translator";
 import FeatureBadge from "sulu-admin-bundle/containers/AiApplication/FeatureBadge";
 import Translator from "sulu-admin-bundle/containers/Translator";
 import {translate} from "sulu-admin-bundle/utils";
+import Actions from "./action/Actions";
 
 /**
  * @param {Object} props
- * @param {String} props.value
+ * @param {String} props.defaultValue
  * @param {String} props.locale
  * @param {String} props.translationKey
  * @param {Function} props.onTranslationConfirm
@@ -14,12 +15,20 @@ import {translate} from "sulu-admin-bundle/utils";
  * @constructor
  */
 function TranslateWithAi({
-    value,
+     defaultValue,
     locale,
     translationKey,
     onTranslationConfirm
 }) {
+    const [value, setValue] = useState(defaultValue);
+    const [version, setVersion] = useState(0);
     const [translating, setTranslating] = useState(false);
+
+    const changeValue = (newValue) => {
+        setValue(newValue);
+        setVersion((prevVersion) => prevVersion + 1);
+    }
+
     const finishTranslating = (text) => {
         onTranslationConfirm(text);
         setTranslating(false);
@@ -42,6 +51,14 @@ function TranslateWithAi({
             />
             {translating && (
                 <Translator
+                    key={`tailr_translations.translator_${version}`}
+                    action={Actions}
+                    actionProps={{
+                        value,
+                        locale,
+                        translationKey,
+                        onChange: changeValue,
+                    }}
                     locale={locale}
                     messages={{
                         title: translate('sulu_admin.translator'),

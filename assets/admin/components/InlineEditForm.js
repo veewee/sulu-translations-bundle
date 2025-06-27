@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {updateTranslationValue} from "../api/updateTranslationValue";
 import {translate} from "sulu-admin-bundle/utils";
 import snackbarStore  from "sulu-admin-bundle/stores/snackbarStore";
-import TranslateWithAi  from "./TranslateWithAi";
+import TranslateWithAi  from "./ai/TranslateWithAi";
 
 const styles = {
     container: {
@@ -69,7 +69,7 @@ function InlineEditForm({translationId, value, locale, translationKey}) {
                 {editingValue}
             </textarea>
             <TranslateWithAi
-                value={editingValue}
+                defaultValue={editingValue}
                 onTranslationConfirm={saveValue}
                 locale={locale}
                 translationKey={translationKey}
